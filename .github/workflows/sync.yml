@@ -1,0 +1,25 @@
+name: Sync contributed forks
+on:
+  schedule:
+    - cron: "30 0 * * *"   # 08:30 Asia/Shanghai
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync forks
+        env:
+          GH_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
+          OWNER: yorzi
+        run: ./scripts/sync.sh
+      - name: Commit run log
+        run: |
+          git config user.name "fork-sync-bot"
+          git config user.email "fork-sync-bot@users.noreply.github.com"
+          git add last-run.json
+          git commit -m "fork-sync: $(date -u +%F)" || echo "no change"
+          git push
