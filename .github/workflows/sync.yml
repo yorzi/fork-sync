@@ -15,7 +15,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
           OWNER: yorzi
-        run: ./scripts/sync.sh
+        run: bash scripts/sync.sh
       - name: Commit run log
         run: |
           git config user.name "fork-sync-bot"
